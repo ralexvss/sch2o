@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    lecturas
+{% endblock title %}
+
+{% block breadcrumb_item %}
+
+<li class="breadcrumb-item active"><i class="far fa fa-list"></i> 
+    {% if lectura_detalle %}<span class="text-success"> Detalle de lecturas</span>{% else %} <span
+        class="text-danger">No existen detalle de lecturas </span>{% endif%}</li>
+{% endblock breadcrumb_item %}
+{% block title_pages %}
+<div class="row">
+    <div class="col-4">
+    Lecturas ingresadas
+    </div>
+    <div class="col-8">
+        <div class="input-group text-center">
+            <div class="input-group-prepend">
+                <span class="input-group-text">Total catastro:
+                    </span>
+            </div>
+            <input class="bg-dark text-success text-center" type="number" name="total_catastro" style="width: 15%" id="id_total_catastro" value="{{total_catastro}}" readonly >
+            <div class="input-group-prepend">
+                <span class="input-group-text">Total lecturas:</span>
+            </div>
+            <input class="bg-dark text-success text-center" type="number" name="total_lecturas" style="width: 15%" id="id_total_lecturas" value="{{total_lecturas}}" readonly>
+            <div class="input-group-prepend">
+                <span for="id_consumo" class='input-group-text'>Falta ingresar:</span>
+            </div>
+            <input class='form-control-plaintext col-sm-2 bg-dark text-danger text-center' type="text" name="falta_ingresar" style="width: 15%" id="id_falta_ingresar"
+                value="{{falta_ingresar}}" readonly>
+        </div>
+    </div>
+</div>
+
+{% endblock title_pages %}
+
+    
+    
+{% block content %}
+
+
+<!-- DataTables Example -->
+<div class="card mb-3">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="display">
+                <thead class="">
+                    <tr>
+                        <th class="text-muted">Item</th>
+                        <th class="text-muted">Lectura</th>
+                        <th class="text-muted">Catastro</th>
+                        <th class="text-muted">L. Ant.</th>
+                        <th class="text-muted">L. Act.</th>
+                        <th class="text-muted">M3</th>
+                        <th class="text-muted">Lectura</th>
+                        <th class="text-muted">Recaudción</th>
+                        <th class="text-muted text-center">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {%for det in lectura_detalle %}
+                    <tr>
+                        
+                        <td>{{forloop.counter}}</td>
+                        <td>{{det.lectura}}</td>
+                        <td>{{det.catastro}}</td>
+                        <td>{{det.lectura_anterior}}</td>
+                        <td>{{det.lectura_actual}}</td>
+                        <td>{{det.consumo}}</td>
+                        <td>{{det.tipo_lectura}}</td>
+                        <td>{{det.estado|yesno:'Adeuda,Pagado'}}
+                        </td>
+                        <td class="text-center">
+                            
+                        </td>
+                    </tr>
+                    {% endfor%}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="card-footer small text-muted">Actualizado {{today}}</div>
+</div>
+
+
+{% endblock content %}

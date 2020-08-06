@@ -1,0 +1,423 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Lecturas
+{% endblock title %}
+
+{% block breadcrumb_item %}
+<li class="breadcrumb-item"><i class="far fa fa-list "></i>
+    <a href="{% url 'recaudacion:lectura_detalle_list' %}" role=" button"> Lista</a>
+</li>
+<!-- <li class="breadcrumb-item"><i class="far fa fa-save "></i>
+    <a href="#" role=" button"> Guardar</a>
+</li> -->
+<li class="breadcrumb-item"><i class="far fa fa-undo text-danger"></i>
+    <a href="{{request.META.HTTP_REFERER}}" role=" button"> Cancelar</a>
+</li>
+<li class="breadcrumb-item"><i class="fas fa-print"></i><a href="{% url 'recaudacion:planilla_recaudada' ultimo %}"
+        role=" button">
+        Imprimir</a>
+
+</li>
+
+{% if encabezado %}
+
+<li class="breadcrumb-item active"><i class="far fa fa-edit"></i><span class="text-warning"> Editar</span></li>
+
+{% else %}
+<li class="breadcrumb-item active"><i class="far fa fa-file-alt"></i> <span class="text-success"> Nueva
+        recaudacón</span>
+</li>
+{%endif%}
+{% endblock breadcrumb_item %}
+
+{% block linea %}
+
+{% endblock linea %}
+
+{% block content %}
+<form method="POST" id="frmLectura" role="form" class="form-inline">{% csrf_token %}
+    <div class="col-xl-12 col-md-12 mb-12">
+        <div class="card shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <!--<div class="text-xs font-weight-bold text-muted text-uppercase mb-1">
+                             {% if encabezado %}Editar{% else %}Nueva{% endif %} Recaudación 
+                        </div>
+                        <div class="dropdown-divider"></div> -->
+                        <div class="row">
+                            <!-- Inicio cabecera izquierda-->
+                            <div class="col-8">
+                                <div class="input-group mb-1">
+                                    <div class="input-group-prepend">
+                                        <!--Inicio encabezado-->
+                                        <label class="input-group-text" for="id_fecha">Fecha:</label>
+                                        <input class="form-control" type="text" id="id_fecha" name="fecha"
+                                            value="{{today|date:'Y-m-d'}}" readonly>
+                                        <label class="input-group-text ml-2" for="id_descuento">Descuento:</label>
+                                        <input type="text" id="id_descuento" name="descuento" class="form-control "
+                                            value="{{catastro.descuento}}" readonly>
+                                    </div>
+                                </div>
+                                <div class="input-group mb-1">
+                                    <div class="input-group-prepend">
+                                        <label class="input-group-text" for="id_pago">Pago:</label>
+                                        <input type="text" id="id_pago" name="pago" class="form-control"
+                                            value="{{catastro.pago.descripcion}}" readonly>
+                                        <input type="text" id="id_total_consumo" name="total_consumo"
+                                            class="form-control text-right " value="Consumo: {{total_consumo}} m3"
+                                            readonly style="width: 20%">
+                                        <label class="input-group-text ml-2"
+                                            for="id_numero_recaudacion">Recaudación:</label>
+                                        <input type="text" id="id_numero_recaudacion" name="numero_recaudacion"
+                                            class="form-control text-right bg-dark text-success" value="{{ultimo}}"
+                                            readonly style="width: 10%">
+
+
+                                    </div>
+                                </div>
+
+                                <div class="input-group pb-2">
+                                    <label class="input-group-text" for="id_descripcion ">Descripcion:</label>
+                                    <input class="form-control-plaintext border" type="text" id="id_descripcion"
+                                        name="descripcion">
+                                </div>
+                                <div class="col-12">
+                                    <!-- DataTables Example -->
+                                    <div class="card mb-1">
+                                        <div class="card-body">
+                                            <div class="table-responsive">
+                                                <table class="table table-bordered table-hover" style="width=100%"
+                                                    cellspacing="0">
+                                                    <thead class="bg-info">
+                                                        <tr>
+                                                            <th class="text-light ">Lecturas</th>
+                                                            <th class="text-light text-center">Abonado</th>
+                                                            <th class="text-light">Ant.</th>
+                                                            <th class="text-light">Act.</th>
+                                                            <th class="text-light">M3</th>
+                                                            <th class="text-light ">Total</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        {%for det in lectura_detalle %}
+                                                        <tr>
+                                                            <td>{{det.lectura}}</td>
+                                                            <td>{{det.catastro}}</td>
+                                                            <td>{{det.lectura_anterior}}</td>
+                                                            <td>{{det.lectura_actual}}</td>
+                                                            <td>{{det.consumo}}</td>
+                                                            <td class="table-success">{{det.total}}</td>
+
+                                                        </tr>
+                                                        {% endfor%}
+                                                    </tbody>
+
+                                                </table>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <!-- DataTables Example -->
+                                    <div class="card mb-3">
+                                        <div class="card-body">
+                                            <div class="table-responsive">
+                                                <table class=" table">
+                                                    <thead class="bg-success">
+                                                        <tr>
+                                                            <th class="text-light">Multa y otros valores</th>
+                                                            <th class="text-light">Cantidad</th>
+                                                            <th class="text-light">Valor</th>
+                                                            <th class="text-light">Total</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        {%for mt in multas %}
+                                                        <tr>
+                                                            <td>{{mt.multa.descripcion}}</td>
+                                                            <td class="text-center">{{mt.cantidad}}</td>
+                                                            <td class="text-right">{{mt.valor}}</td>
+                                                            <td class="text-right">{{mt.total}}</td>
+                                                        </tr>
+                                                        {% endfor%}
+                                                    </tbody>
+                                                </table>
+                                                <div class="card-footer small text-muted">Actualizado: {{today}}</div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            </div>
+                            <!--End cabecera izquierda-->
+                            <!--Inicio totales-->
+                            <div class="col-4">
+                                <div class="row">
+                                    <!-- Inicio totales -->
+                                    <div class="col-4">
+
+                                        <div class="input-group ">
+                                            <div class="input-group-prepend">
+                                                <label class="input-group-text text-muted">T.
+                                                    Base</label>
+                                            </div>
+                                        </div>
+                                        <div class="input-group ">
+                                            <div class="input-group-prepend">
+                                                <label class="input-group-text text-muted">Bas.
+                                                    reserva</label>
+                                            </div>
+                                        </div>
+                                        <div class="input-group ">
+                                            <div class="input-group-prepend">
+                                                <label class="input-group-text text-muted">Excedente</label>
+                                            </div>
+                                        </div>
+                                        <div class="input-group ">
+                                            <div class="input-group-prepend">
+                                                <label class="input-group-text text-muted">Cons.
+                                                    maximo</label>
+                                            </div>
+                                        </div>
+                                        <div class="input-group ">
+                                            <div class="input-group-prepend">
+                                                <label class="input-group-text text-muted">Administración</label>
+                                            </div>
+                                        </div>
+                                        <div class="input-group ">
+                                            <div class="input-group-prepend">
+                                                <label class="input-group-text text-muted">Alcantarillado</label>
+                                            </div>
+                                        </div>
+                                        <div class="input-group ">
+                                            <div class="input-group-prepend">
+                                                <label class="input-group-text text-muted">Derecho conexión</label>
+                                            </div>
+                                        </div>
+                                        <div class="input-group ">
+                                            <div class="input-group-prepend">
+                                                <label class="input-group-text text-muted">Multas y otros</label>
+                                            </div>
+                                        </div>
+                                        <div class="input-group ">
+                                            <div class="input-group-prepend">
+                                                <label class="input-group-text text-muted">Subtotal</label>
+                                            </div>
+                                        </div>
+                                        <div class="input-group ">
+                                            <div class="input-group-prepend">
+                                                <label class="input-group-text text-muted">Total
+                                                    descuento</label>
+                                            </div>
+                                        </div>
+
+                                        <div class="input-group ">
+                                            <div class="input-group-prepend">
+                                                <label class="input-group-text text-muted">TOTAL
+                                                    GENERAL</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-4">
+                                        <div class="input-group ">
+                                            <div class="input-group-prepend">
+                                                <input type="text" id="id_total_base" name="total_base"
+                                                    class="form-control text-right" value="{{total_base}}" readonly>
+                                            </div>
+                                        </div>
+                                        <div class="input-group ">
+                                            <div class="input-group-prepend">
+                                                <input type="text" id="id_total_base_reserva" name="total_base_reserva"
+                                                    class="form-control text-right" value="{{total_base_reserva}}"
+                                                    readonly>
+                                            </div>
+                                        </div>
+                                        <div class="input-group ">
+                                            <div class="input-group-prepend">
+                                                <input type="text" id="id_total_excedente" name="total_excedente"
+                                                    class="form-control text-right" value="{{total_excedente}}"
+                                                    readonly>
+                                            </div>
+                                        </div>
+                                        <div class="input-group ">
+                                            <div class="input-group-prepend">
+                                                <input type="text" id="id_total_consumo_maximo"
+                                                    name="total_consumo_maximo" class="form-control text-right"
+                                                    value="{{total_consumo_maximo}}" readonly>
+                                            </div>
+                                        </div>
+                                        <div class="input-group ">
+                                            <div class="input-group-prepend">
+                                                <input type="text" id="id_total_administracion"
+                                                    name="total_administracion" class="form-control text-right  "
+                                                    value="{{total_administracion}}" readonly>
+                                            </div>
+                                        </div>
+                                        <div class="input-group ">
+                                            <div class="input-group-prepend">
+                                                <input type="text" id="id_total_alcantarillado"
+                                                    name="total_alcantarillado" class="form-control text-right "
+                                                    value="{{total_alcantarillado}}" readonly>
+                                            </div>
+                                        </div>
+                                        <div class="input-group ">
+                                            <div class="input-group-prepend">
+                                                <input type="text" id="id_total_derecho_conexion"
+                                                    name="total_derecho_conexion" class="form-control text-right"
+                                                    value="{{total_derecho_conexion}}" readonly>
+                                            </div>
+                                        </div>
+                                        <div class="input-group ">
+                                            <div class="input-group-prepend">
+                                                <input type="text" id="id_total_subtotal" name="total_subtotal"
+                                                    class="form-control text-right text-danger " value="{{total_otros}}"
+                                                    readonly>
+                                            </div>
+                                        </div>
+                                        <div class="input-group ">
+                                            <div class="input-group-prepend">
+                                                <input type="text" id="id_total_subtotal" name="total_subtotal"
+                                                    class="form-control text-right text-success " value="{{subtotal}}"
+                                                    readonly>
+                                            </div>
+                                        </div>
+                                        <div class="input-group ">
+                                            <div class="input-group-prepend">
+                                                <input type="text" id="id_total_descuento" name="total_descuento"
+                                                    class="form-control text-right" value="{{total_descuento}}"
+                                                    readonly>
+                                            </div>
+                                        </div>
+                                        <div class="input-group ">
+                                            <div class="input-group-prepend">
+                                                <input type="text" id="id_total_general" name="total_general"
+                                                    class="form-control text-right bg-dark text-success"
+                                                    value="{{total_general}}" readonly>
+                                            </div>
+                                        </div>
+                                        <!--fin totales-->
+
+                                    </div>
+                                    <!-- Fin totales -->
+
+                                </div>
+                                <!--Opciones-->
+                                <!--Botones-->
+                                <button type="submit" class="btn btn-success  mt-2 btn-block" name="cobrar"><i
+                                        class="fas fa-money-bill-wave-alt "></i>
+                                    Cobrar</button>
+                                <a href="{{request.META.HTTP_REFERER}}" type="button"
+                                    class="btn btn-primary  mt-2 btn-block"><i class="fas fa-list-ol"></i>
+                                    Nueva recaudación</a>
+                                <!--Fin botones-->
+
+                            </div>
+                        </div>
+                        <!--Fin fila cabecera-->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+</form>
+{% endblock content %}
+
+{% block fecha %}
+
+<script>
+    $(document).ready(function () {
+        $("#").datetimepicker({
+            format: 'Y-m-d',
+            timepicker: false
+        });
+    });
+</script>
+{% endblock fecha %}
+
+{% block varios %}
+
+{% endblock varios %}
+
+{% block js_pages %}
+
+<script>
+    $(document).ready(function () {
+
+        $("#sidebarToggle").click();
+
+
+        $('#table').DataTable({
+            "pagingType": "full_numbers",
+            language: {
+                "sProcessing": "Procesando...",
+                "sLengthMenu": "Mostrar _MENU_ registros",
+                "sZeroRecords": "No se encontraron resultados",
+                "sEmptyTable": "Ningún dato disponible en esta tabla",
+                "sInfo": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+                "sInfoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
+                "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
+                "sInfoPostFix": "",
+                "sSearch": "Buscar:",
+                "sUrl": "",
+                "sInfoThousands": ",",
+                "sLoadingRecords": "Cargando...",
+                "oPaginate": {
+                    "sFirst": "<i class= 'fas fa-angle-double-left'></i>",
+                    "sLast": "<i class= 'fas fa-angle-double-right'></i>",
+                    "sNext": "<i class= 'fas fa-angle-right'></i>",
+                    "sPrevious": "<i class= 'fas fa-angle-left'></i>",
+                },
+                "oAria": {
+                    "sSortAscending": ": Activar para ordenar la columna de manera ascendente",
+                    "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+                }
+            }
+        });
+    });
+
+    function selectCatastro(numero, medidor, apellidos, nombres, catastro, lectura_anterior) {
+
+        $('#id_numero').val(+numero);
+        $('#id_medidor').val(+medidor);
+        $('#id_apellidos').val(apellidos);
+        $('#id_nombres').val(nombres);
+        $('#id_catastro').val(+catastro);
+        $('#id_lectura_anterior').val(lectura_anterior);
+        $('#id_lectura_actual').focus();
+        $('#id_lectura_actual').select();
+        $('#table').DataTable().search('').draw();
+    }
+
+    function calcular_detalle() {
+
+        let consumo, lan, lac;
+        lan = $('#id_lectura_anterior').val();
+        lac = $('#id_lectura_actual').val();
+        lac = lac === "" ? 0 : +lac;
+        lac = lac < 0 ? 0 : +lac;
+
+        lan = lan === "" ? 0 : +lan;
+        lan = lan < 0 ? 0 : +lan;
+
+        if (lac >= lan) {
+            consumo = lac - lan
+            $('#id_consumo').val(consumo);
+        } else {
+            $('#id_consumo').val(0);
+        }
+    }
+
+    function clear_detail() {
+        $('#id_consumo').val(0);
+        $('#id_lectura_anterior').val(0);
+        $('#id_lectura_actual').val(0);
+    }
+
+</script>
+
+{% endblock js_pages %}

@@ -1,0 +1,58 @@
+<div class="modal-dialog modal-md">
+    <div class="modal-content">
+        <div class="col-xl-12 col-md-12">
+                <div class="card-body  bg-danger rounded text-light shadow">
+                    <div class="row align-items-center">
+                        <div class="col p-2">
+                            <div class=" text-xs font-weight-bold text-uppercase">
+                                ¿Abonados por <span class="text-info"> </span> ingresar?
+                                <div class="card-body-icon">
+                                    <i class="far fa fa-file-alt"></i>
+                                </div>
+                            </div>
+                            <div class="dropdown-divider"></div>
+                            <div class="row">
+                                <div class="mx-auto">
+                                    <div class="table-responsive">
+                                        <table class="table">
+                                            <thead class="">
+                                                <tr>
+                                                    <th class="text-muted">Id</th>
+                                                    <th class="text-muted">Número</th>
+                                                    <th class="text-muted">Descripción</th>
+                                                    
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {%for item in faltan_ingresar %}
+                                                <tr>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    
+                                                </tr>
+                                                {% endfor%}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="dropdown-divider"></div>
+                            <div class="row">
+                                <div class="col">
+                                    
+                                </div>
+                                <div class="col">
+                                    <button onclick="return cerrar_modal()" type="button"
+                                        class="btn btn-block text-white"><span class="fa fa-undo">
+                                            Cerrar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        </div>
+    </div>
+</div>
+

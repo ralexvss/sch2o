@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <ul>
+        Total registros: {{registro}}
+        {% for item in model  %}
+        <li>No. Registro: {{forloop.counter}}</li>
+        <li>Id: {{item.id}}</li>
+        <li>Abonado: {{item.abonado_id}}</li>
+        <li>Catastro: {{item.catastro_id}}</li>
+        <li>Total: {{item.total}}</li>
+        <hr>
+        {% endfor %}
+    </ul>
+    
+{% endblock content %}
+    
